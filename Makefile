@@ -123,7 +123,7 @@ release: setup basic_components xpm_parser
 	$(COPY) deps$(PATHSEP)simple_components$(PATHSEP)xpm$(PATHSEP)*.ads include
 	- $(COPY) deps$(PATHSEP)simple_components$(PATHSEP)xpm$(PATHSEP)*.ali lib
 	cd lib && $(SET_READONLY)
-	cd deps/zanyblue && make -C src setup library zbmcompile.app
+#	cd deps/zanyblue && make -C src setup library zbmcompile.app
 
 # Needed for Zanyblue install
 include deps/zanyblue/src/mkfile/version.mk
@@ -143,8 +143,8 @@ install: release gnoga_tools xpm_parser
 	cd deps/simple_components && gprinstall -f --prefix=$(PREFIX) -p strings_edit.gpr
 	cd deps/simple_components && gprinstall -f --prefix=$(PREFIX) -p tables.gpr
 	cd deps/simple_components/xpm && gprinstall -f --prefix=$(PREFIX) -p xpm_parser.gpr
-	cd deps/zanyblue && gprinstall -f --prefix=$(PREFIX) -p --install-name=zblib src/zblib.gpr $(ZBGNATXDEFS)
-	cd deps/zanyblue && gprinstall -f --prefix=$(PREFIX) -p --install-name=zbmcompile -aP src -aP lib/gnat src/zbmcompile/zbmcompile.gpr $(ZBGNATXDEFS)
+#	cd deps/zanyblue && gprinstall -f --prefix=$(PREFIX) -p --install-name=zblib src/zblib.gpr $(ZBGNATXDEFS)
+#	cd deps/zanyblue && gprinstall -f --prefix=$(PREFIX) -p --install-name=zbmcompile -aP src -aP lib/gnat src/zbmcompile/zbmcompile.gpr $(ZBGNATXDEFS)
 	cd lib && $(SET_READONLY)
 
 # Install Gnoga with DEBUG on
@@ -159,8 +159,8 @@ install_debug: gnoga gnoga_tools xpm_parser
 	cd deps/simple_components && gprinstall -a -f --prefix=$(PREFIX) -p --install-name=strings_edit strings_edit.gpr
 	cd deps/simple_components && gprinstall -a -f --prefix=$(PREFIX) -p --install-name=tables tables.gpr
 	cd deps/simple_components/xpm && gprinstall -a -f --prefix=$(PREFIX) -p xpm_parser.gpr
-	cd deps/zanyblue && gprinstall -a -f --prefix=$(PREFIX) -p --install-name=zblib src/zblib.gpr $(ZBGNATXDEFS)
-	cd deps/zanyblue && gprinstall -f --prefix=$(PREFIX) -p --install-name=zbmcompile -aP src -aP lib/gnat src/zbmcompile/zbmcompile.gpr $(ZBGNATXDEFS)
+#	cd deps/zanyblue && gprinstall -a -f --prefix=$(PREFIX) -p --install-name=zblib src/zblib.gpr $(ZBGNATXDEFS)
+#	cd deps/zanyblue && gprinstall -f --prefix=$(PREFIX) -p --install-name=zbmcompile -aP src -aP lib/gnat src/zbmcompile/zbmcompile.gpr $(ZBGNATXDEFS)
 	cd lib && $(SET_READONLY)
 
 uninstall:
@@ -199,8 +199,8 @@ electron:
 	@echo "See docs/native_desktop_apps.md for instructions on full desktop development"
 
 # Zanyblue with DEBUG on
-zanyblue:
-	cd deps/zanyblue && make -C src BUILD=Debug setup library zbmcompile.app
+#zanyblue:
+#	cd deps/zanyblue && make -C src BUILD=Debug setup library zbmcompile.app
 
 deps/PragmARC:
 	- cd deps && git clone https://github.com/jrcarter/PragmARC.git
