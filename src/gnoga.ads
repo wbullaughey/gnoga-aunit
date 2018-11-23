@@ -38,7 +38,8 @@
 with Ada.Strings.Unbounded;
 
 package Gnoga is
-   version      : constant String := "1.2b";
+   version      : constant String := "1.5";
+   Debug        : Boolean := False;
    version_high : constant        := 1;
    version_low  : constant        := 2;
 

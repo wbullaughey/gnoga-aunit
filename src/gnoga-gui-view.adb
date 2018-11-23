@@ -38,6 +38,7 @@
 with Ada.Strings.Fixed;
 with Ada.Strings.Maps.Constants;
 
+with CAC.Trace;
 with Gnoga.Gui.Document;
 with Gnoga.Gui.Element.Common;
 
@@ -76,7 +77,10 @@ package body Gnoga.Gui.View is
       ID      : in     String := "")
    is
    begin
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who &
+         " enter id '" & ID & "'");
       View.Create_From_HTML (Parent, "<div />", ID);
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " exit");
    end Create;
 
    --------------------

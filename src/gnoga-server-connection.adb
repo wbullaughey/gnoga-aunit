@@ -42,7 +42,7 @@ with Ada.Unchecked_Deallocation;
 with Ada.Exceptions;
 
 with Ada.Containers.Ordered_Maps;
-
+with CAC.Trace.Tasks;
 with Gnoga.Server.Mime;
 
 with Strings_Edit.Quoted;
@@ -266,7 +266,16 @@ package body Gnoga.Server.Connection is
 
    task body Gnoga_HTTP_Server_Type is
    begin
+      if Debug then
+         CAC.Trace.Log (CAC.Trace.Here, CAC.Trace.Who & " enter");
+         CAC.Trace.Tasks.Start ("GNOGA HTTP Server", CAC.Trace.Here);
+      end if;
       accept Start;
+      if Debug then
+         CAC.Trace.Log (CAC.Trace.Here, CAC.Trace.Who &
+            " started. Secure_Server " & Secure_Server'img &
+            " Secure_Only " & Secure_Only'img);
+      end if;
 
       declare
          Factory : aliased Gnoga_HTTP_Factory
@@ -288,6 +297,7 @@ package body Gnoga.Server.Connection is
                pragma Unreferenced (Server);
             begin
                accept Stop;
+               CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " stop");
             end;
          else
             if not Secure_Only then
@@ -301,6 +311,8 @@ package body Gnoga.Server.Connection is
                   pragma Unreferenced (Server2);
                begin
                   accept Stop;
+                  CAC.Trace.Log (Debug, CAC.Trace.Here,
+                     CAC.Trace.Who & " stop");
                end;
             else
                declare
@@ -310,16 +322,24 @@ package body Gnoga.Server.Connection is
                pragma Unreferenced (Server);
                begin
                   accept Stop;
+                  CAC.Trace.Log (Debug, CAC.Trace.Here,
+                     CAC.Trace.Who & " stop");
                end;
             end if;
          end if;
 
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " release");
          Server_Wait.Release;
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " released");
 
          if Verbose_Output then
             Gnoga.Log ("HTTP Server Stopping");
          end if;
       end;
+      if Debug then
+         CAC.Trace.Tasks.Stop;
+         CAC.Trace.Log (CAC.Trace.Here, CAC.Trace.Who & " stopped");
+      end if;
    end Gnoga_HTTP_Server_Type;
 
    ------------
@@ -481,6 +501,9 @@ package body Gnoga.Server.Connection is
       end Adjust_Name;
 
    begin
+      if Verbose_Output then
+         Gnoga.Log ("Kind: " & Status.Kind'Img);
+      end if;
       case Status.Kind is
          when None =>
             Gnoga.Log ("File kind none requested");
@@ -582,7 +605,8 @@ package body Gnoga.Server.Connection is
    exception
       when E : others =>
          Log ("Do_Get_Head Error");
-         Log (Ada.Exceptions.Exception_Information (E));
+         Log (Ada.Exceptions.Exception_Information (E) & " message '" &
+            Ada.Exceptions.Exception_Message (E) & "'");
    end Do_Get_Head;
 
    ------------
@@ -738,6 +762,7 @@ package body Gnoga.Server.Connection is
                          Verbose : in Boolean := True)
    is
    begin
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " boot " & Boot);
       Verbose_Output := Verbose;
 
       Boot_HTML   := Ada.Strings.Unbounded.To_Unbounded_String (Boot);
@@ -767,8 +792,15 @@ package body Gnoga.Server.Connection is
          end if;
       end if;
 
+      Exit_Application_Requested := False;
       Watchdog := new Watchdog_Type;
       Watchdog.Start;
+      CAC.Trace.Log (Debug, CAC.Trace.Here,
+         CAC.Trace.Who & " Exit_Application_Requested " &
+         Exit_Application_Requested'Img &
+         " Watchdog " & (if Watchdog = null then "null" else "") &
+         " Gnoga_HTTP_Server " &
+            (if Gnoga_HTTP_Server = null then "null" else ""));
    end Initialize;
 
    ---------
@@ -777,12 +809,21 @@ package body Gnoga.Server.Connection is
 
    procedure Run is
    begin
+      Server_Wait.Reset;
+
       Gnoga_HTTP_Server := new Gnoga_HTTP_Server_Type;
       Gnoga_HTTP_Server.Start;
 
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " hold");
       Server_Wait.Hold;
+      CAC.Trace.Log (Debug, CAC.Trace.Here,
+         CAC.Trace.Who & " back from hold");
 
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
       Exit_Application_Requested := True;
+         CAC.Trace.Log (Debug, CAC.Trace.Here,
+            CAC.Trace.Who & " Exit_Application_Requested " &
+               Exit_Application_Requested'Img);
    end Run;
 
    -------------------
@@ -801,7 +842,8 @@ package body Gnoga.Server.Connection is
    protected body Connection_Holder_Type is
       entry Hold when not Connected is
       begin
-         null;
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " Connected " & Connected'img);
+--       null;
          --  Semiphore does not reset itself to a blocking state.
          --  This ensures that if Released before Hold that Hold
          --  will not block and connection will be released.
@@ -814,6 +856,13 @@ package body Gnoga.Server.Connection is
       begin
          Connected := False;
       end Release;
+
+      procedure Reset is
+      begin
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " Connected " & Connected'img);
+         Connected := True;
+      end Reset;
+
    end Connection_Holder_Type;
 
    type Connection_Holder_Access is access all Connection_Holder_Type;
@@ -991,6 +1040,8 @@ package body Gnoga.Server.Connection is
       procedure Delete_Connection (ID : in Gnoga.Types.Connection_ID) is
       begin
          if (ID > 0) then
+            CAC.Trace.Log (Debug, CAC.Trace.Here,
+               CAC.Trace.Who & " ID" & ID'Img);
             Gnoga.Log ("Deleting connection -" & ID'Img);
 
             if Connection_Holder_Map.Contains (ID) then
@@ -1103,6 +1154,7 @@ package body Gnoga.Server.Connection is
          --  Message: Gnoga.Server.Connection.Socket_Maps.Tree_Operations.
          --    Delete_Node_Sans_Free: attempt to tamper with cursors
          --    (container is busy)
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
          while not Socket_Map.Is_Empty loop
             Do_Delete (Socket_Map.First);
          end loop;
@@ -1113,6 +1165,11 @@ package body Gnoga.Server.Connection is
       Connection_Holder : aliased Connection_Holder_Type;
       ID : Gnoga.Types.Connection_ID;
    begin
+      if Debug then
+         CAC.Trace.Log (CAC.Trace.Here, CAC.Trace.Who & " TID" &
+            TID'img & " enter");
+         CAC.Trace.Tasks.Start ("GNOGA event", CAC.Trace.Here);
+      end if;
       ID := TID;
       --  Insure that TID is retained even if task is "deleted"
 
@@ -1122,7 +1179,7 @@ package body Gnoga.Server.Connection is
       begin
          delay 0.3;
          --  Give time to finish handshaking
-
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
          Execute_Script (ID, "gnoga['Connection_ID']=" & ID'Img);
 
          Execute_Script (ID, "TRUE=true");
@@ -1132,7 +1189,9 @@ package body Gnoga.Server.Connection is
          --  in TRUE or FALSE not the case sensitive true or false
          --  expected.
 
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
          On_Connect_Event (ID, Connection_Holder'Unchecked_Access);
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
       exception
          when E : Connection_Error =>
             --  Browser was closed by user
@@ -1146,9 +1205,16 @@ package body Gnoga.Server.Connection is
             Log (Ada.Exceptions.Exception_Information (E));
       end;
 
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
       Connection_Manager.Delete_Connection_Holder (ID);
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
       Connection_Manager.Finalize_Connection (ID);
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
       --  Insure cleanup even if socket not closed by external connection
+      if Debug then
+         CAC.Trace.Tasks.Stop;
+         CAC.Trace.Log (CAC.Trace.Here, CAC.Trace.Who & " stopped");
+      end if;
    exception
       when E : others =>
          Log ("Connection Manager Error Connection ID =" & ID'Img);
@@ -1160,16 +1226,21 @@ package body Gnoga.Server.Connection is
    --------------
 
    task body Watchdog_Type is
-      procedure Ping (ID : in Gnoga.Types.Connection_ID);
+      procedure Ping (ID      : in Gnoga.Types.Connection_ID;
+                      Deleted : out Boolean);
 
-      procedure Ping (ID : in Gnoga.Types.Connection_ID) is
+      procedure Ping (ID      : in Gnoga.Types.Connection_ID;
+                      Deleted : out Boolean) is
          Socket : Socket_Type := Connection_Manager.Connection_Socket (ID);
       begin
+         Deleted := False;
          if Socket.Content.Finalized then
             if Verbose_Output then
                Gnoga.Log ("Ping on Finalized -" & ID'Img);
             end if;
+            CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
             Connection_Manager.Delete_Connection (ID);
+            Deleted := True;
             Socket.Shutdown;
          elsif Socket.Content.Connection_Type = Long_Polling then
             if Verbose_Output then
@@ -1209,6 +1280,7 @@ package body Gnoga.Server.Connection is
 
                      begin
                         Connection_Manager.Delete_Connection (ID);
+                        Deleted := True;
                      exception
                         when E : others =>
                            Log ("Watchdog ping error - " & ID'Img);
@@ -1218,6 +1290,10 @@ package body Gnoga.Server.Connection is
             end if;
       end Ping;
    begin
+      if Debug then
+         CAC.Trace.Log (CAC.Trace.Here, CAC.Trace.Who & " enter");
+         CAC.Trace.Tasks.Start ("GNOGA watch dog", CAC.Trace.Here);
+      end if;
       accept Start;
 
       loop
@@ -1226,22 +1302,36 @@ package body Gnoga.Server.Connection is
          begin
             Connection_Manager.First (ID);
             while ID /= 0 loop
-               Ping (ID);
+               declare
+                  Deleted     : Boolean;
+
+               begin
+                  Ping (ID, Deleted);
+                  if Deleted then
+                     Connection_Manager.First (ID);
+                  else
                Connection_Manager.Next (ID);
+                  end if;
+               end;
             end loop;
          exception
             when E : others =>
-               Log ("Watchdog error.");
+               Log ("Watchdog error on websocket - " & ID'Img);
                Log (Ada.Exceptions.Exception_Information (E));
          end;
 
          select
             accept Stop;
+            CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " stop");
             exit;
          or
             delay 60.0;
          end select;
       end loop;
+      if Debug then
+         CAC.Trace.Tasks.Stop;
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " stopped");
+      end if;
    end Watchdog_Type;
 
    ---------------------------
@@ -1387,6 +1477,8 @@ package body Gnoga.Server.Connection is
 
       Old_ID : constant String := Get_Old_ID;
    begin
+      CAC.Trace.Log (true, CAC.Trace.Here, CAC.Trace.Who &
+         " ID " & ID'img & " F '" & F & "' Old_ID '" & Old_ID & "'");
       Connection_Manager.Add_Connection (Socket => S,
                                          New_ID => ID);
 
@@ -1675,6 +1767,10 @@ package body Gnoga.Server.Connection is
       D : Ada.Strings.Unbounded.Unbounded_String;
       I : Gnoga.Types.Unique_ID;
    begin
+      if Debug then
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " enter");
+         CAC.Trace.Tasks.Start ("GNOGA Dispatch", CAC.Trace.Here);
+      end if;
       accept Start (Event : in String;
                     Data  : in String;
                     ID    : in Gnoga.Types.Unique_ID)
@@ -1702,6 +1798,10 @@ package body Gnoga.Server.Connection is
       Object.Flush_Buffer;
 
       Dispatch_Task_Objects.Delete_Dispatch_Task (I);
+      if Debug then
+         CAC.Trace.Tasks.Stop;
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " stopped");
+      end if;
    exception
       when E : others =>
          Log ("Dispatch Error");
@@ -2301,11 +2401,21 @@ package body Gnoga.Server.Connection is
    procedure Stop is
       ID : Gnoga.Types.Connection_ID;
    begin
+         CAC.Trace.Log (Debug, CAC.Trace.Here,
+         CAC.Trace.Who & " Exit_Application_Requested " &
+         Exit_Application_Requested'Img &
+         " Watchdog " & (if Watchdog = null then "null" else "exits") &
+         " Gnoga_HTTP_Server " &
+         (if Gnoga_HTTP_Server = null then "null" else "exists"));
+
       if not Exit_Application_Requested and
         Watchdog /= null and
         Gnoga_HTTP_Server /= null
       then
          Exit_Application_Requested := True;
+         CAC.Trace.Log (Debug, CAC.Trace.Here,
+            CAC.Trace.Who & " stop watchdog Exit_Application_Requested " &
+            Exit_Application_Requested'Img);
          Watchdog.Stop;
          Watchdog := null;
 
@@ -2317,8 +2427,15 @@ package body Gnoga.Server.Connection is
 
          Connection_Manager.Delete_All_Connections;
 
+         CAC.Trace.Log (Debug, CAC.Trace.Here,
+            CAC.Trace.Who & " stop http server");
          Gnoga_HTTP_Server.Stop;
          Gnoga_HTTP_Server := null;
+      elsif Watchdog /= null then
+         CAC.Trace.Log (Debug, CAC.Trace.Here,
+            CAC.Trace.Who & " stop watchdog");
+         Watchdog.Stop;
+         Watchdog := null;
       end if;
    end Stop;
 

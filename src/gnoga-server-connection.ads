@@ -88,6 +88,7 @@ package Gnoga.Server.Connection is
    protected type Connection_Holder_Type is
       entry Hold;
       procedure Release;
+      procedure Reset;
    private
       Connected : Boolean := True;
    end Connection_Holder_Type;

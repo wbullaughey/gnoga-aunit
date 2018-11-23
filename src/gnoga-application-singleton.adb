@@ -35,6 +35,7 @@
 -- For more information please go to http://www.gnoga.com                   --
 ------------------------------------------------------------------------------
 
+with CAC.Trace.Tasks;
 with Gnoga.Server.Connection;
 with Gnoga.Types;
 
@@ -91,8 +92,14 @@ package body Gnoga.Application.Singleton is
 
    task body Web_Server_Task is
    begin
+      if Debug then
+         CAC.Trace.Tasks.Start ("GNOGA Web Server", CAC.Trace.Here);
+      end if;
       accept Start;
       Gnoga.Server.Connection.Run;
+      if Debug then
+         CAC.Trace.Tasks.Stop;
+      end if;
    end Web_Server_Task;
 
    ----------------
