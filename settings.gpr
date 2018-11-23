@@ -1,0 +1,59 @@
+abstract project Settings is
+
+   type Build_Type is ("Debug", "Release");
+   Build : Build_Type := external ("PRJ_BUILD", "Debug");
+
+   type Target_Type is ("OSX", "Windows", "Freebsd", "Linux", "Unix");
+   Build_Target : Target_Type := external ("PRJ_TARGET", "Unix");
+
+   --------------
+   -- Compiler --
+   --------------
+
+   Common_Options := ("-gnaty3abcefhiklmnOprsStu", "-gnat2012", "-gnatW8");
+   --  Common options used for the Debug and Release modes
+
+   Debug_Options := ("-g", "-gnata", "-gnatq", "-gnatQ", "-gnatw.eH.YD", "-gnatVa", "-gnato", "-fstack-check", "-gnatf", "-gnateE", "-gnateF");
+
+   Release_Options := ("-O2");
+
+   package Compiler is
+      case Build is
+         when "Debug" =>
+            for Default_Switches ("Ada") use Common_Options & Debug_Options;
+
+         when "Release" =>
+            for Default_Switches ("Ada") use Common_Options & Release_Options;
+      end case;
+
+      case Build_Target is
+         when "OSX" =>
+            for Default_Switches ("Ada")
+              use Compiler'Default_Switches ("Ada") & ("-fno-common");
+         when others =>
+            null;
+      end case;
+   end Compiler;
+
+   ------------
+   -- Binder --
+   ------------
+
+   package Binder is
+      for Default_Switches ("Ada") use ("-E");
+   end Binder;
+
+   ------------
+   -- Linker --
+   ------------
+
+   package Linker is
+      case Build_Target is
+         when "OSX" =>
+            for Default_Switches ("Ada") use ("-Wl,-no_pie");
+         when others =>
+            null;
+      end case;
+   end Linker;
+
+end Settings;

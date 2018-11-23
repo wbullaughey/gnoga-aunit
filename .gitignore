@@ -1,0 +1,11 @@
+obj/
+bin/
+lib/
+include/
+gnatinspect.db
+.DS_Store
+*.o
+*.ali
+*.npp
+*.cgpr
+docs/html/

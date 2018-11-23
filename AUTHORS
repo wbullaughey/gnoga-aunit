@@ -1,0 +1,31 @@
+GNOGA - The GNU Omnificent GUI for Ada
+--------------------------------------
+http://www.gnoga.com
+
+* The author of the Gnoga framework is David Botton.
+
+* Additional maintainers of Gnoga currently are: Gautier de Montmollin, Jeffrey Carter and Pascal Pignard.
+
+* Main contributors currently are: Gautier de Montmollin, Jeffrey Carter, Jeremiah Breeden and Pascal Pignard.
+  (See SF GIT commit messages for all contributors)
+
+* Gnoga uses Simple Components written by Dmitry A. Kazakov for its http and
+  WebSockets communication layer (http://www.dmitry-kazakov.de/ada/components.htm).
+
+* The PragmArc library, Chattanooga, Password Gen, Mine Detector, Random_Int, Movies, tic tac toe demos
+  applications were written by Jeffrey Carter (https://github.com/jrcarter).
+
+* The Connect Four demo was written originally for GNAT-JVM by Barry Fagin and
+  Martin Carlisle and adapted to Gnoga by Pascal Pignard.
+
+* LinXtris is a multi-platform Tetris clone was written originally in Ada 95 and GtkAda
+  by Dulio Matos Leite de C. e Silva and adapted to Gnoga by Pascal Pignard.
+
+* ZanyBlue is an Ada 2005 package supporting localization support in Ada
+  by allowing the externalization of application messages written
+  by Michael Rohan (http://zanyblue.sourceforge.net).
+
+* JLokalize is a tool for the internationalization (i18n) of applications written by Trilarion.
+
+* The Othello demo was written originally for GTKAda by Adrian Hoe
+  (https://github.com/adrianhoe/adaothello) and adapted to Gnoga by Jeremiah Breeden.

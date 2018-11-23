@@ -1,0 +1,10 @@
+LinXtris - http://sourceforge.net/projects/linxtris
+
+LinXtris is a multi-platform Tetris clone written in Ada 95 and GtkAda.
+Please see the INSTALL file for instruction on how to build and run LinXtris.
+
+Comments and suggestions are welcome: dulio@users.sourceforge.net
+
+
+20160207 - GNOGA port by Pascal Pignard
+Send comments to: http://sourceforge.net/p/gnoga/mailman/gnoga-list

@@ -1,0 +1,122 @@
+Q) Where can I learn more about Gnoga?
+
+A) http://www.gnoga.com, going to the sourceforge site, and most importantly joining the gnoga mailing list at - https://lists.sourceforge.net/lists/listinfo/gnoga-list. Reading the sources tests and demos are also a good place to start.
+
+Q) What licenses does Gnoga use?
+
+A) Gnoga is under the GNAT modified GPLv3 with runtime exceptions which means Gnoga can be used in proprietary applications and along side any license you wish, however any modifications, extensions, etc. of Gnoga itself fall under the same license as Gnoga for those changes alone and that source must be made available for distribution with your binaries, but it does not affect the rest of your code other code or require open sourcing any of it.
+
+Q) Why does Gnoga use the GPL with run time exceptions and not the full GPL license?
+
+A) One goal of Gnoga is to encourage the use of Ada for general use  modern software development, forcing applications to be under the GPL license would limit that goal. However those of use believing in the idea of "free" software would encourage choosing a "free" license for your projects.
+
+Q) Can I distribute programs I compile with Gnoga as proprietary applications?
+
+A) Yes, unless you have used the GNAT-GPL shareware version from libre, which showcases AdaCore's GNAT-PRO distribution of gcc/ada. Their "GPL" version is designed to pass the "GPL virus" too anything compiled with it to encourage purchasing their support packages. You can find excellent pro quality unencumbered distributions of gcc/ada at http://GetAdaNow.com
+
+Q) Can I build native Gtk Apps with Gnoga?
+
+A) Yes, see docs/native_gtk_apps.md for how.
+
+Q) Can I Build native Mac OS X applications with Gnoga.
+
+A) See docs/native_osx_apps.md
+
+Q) Can I launch a browser on start up to access by Gnoga Application?
+
+A) Yes, use Gnoga.Applications.Open_URL
+
+Q) How do I use Gnoga with MinGW or Cygwin on Windows 32 or 64bits?
+
+A) Gnoga by default uses gprtools that are not included with those distros. The makefile contains simple directions of what to comment and uncomment in order to use gnatmake and gnatclean under MSYS or Cygwin environments. You can also compile Gnoga from the regular Windows command line see make_on_windows.bat and clean_on_windows.bat.
+
+Q) How to compile Gnoga on Debian (wheezy)?
+
+A) You will need to use a more recent version of gcc/ada currently as Wheezy uses gcc/ada 4.6 and the minimum requirement for Gnoga is 4.7. Using the gcc/ada from Debian Jesse (4.9) works well.
+
+Q) How to use Gnoga on a Raspberry Pi?
+
+A) If you are using Raspbian you need to make sure it is Raspbian based on Debian Jessie or later. If you are running the Raspbian based on Wheezy you can use the following to upgrade you Pi to Jessie:
+
+sudo vi /etc/apt/sources.list
+--  change all references to wheezy to jessie
+
+sudo apt-get update
+sudo apt-get upgrade 
+sudo apt-get dist-upgrade
+
+sudo apt-get install gnat
+
+Q) Do I need Sqlite3 or MySQL installed to use Gnoga?
+
+A) Only if you choose to build database apps or compile the database examples. 
+
+Q) How do I get sqlite3 and MySQL on my Mac for use with Gnoga?
+
+Sqlite3 is already built in to Mac OS X. You would only need to install MySQL if you wanted to run the MySQL test or wanted to use MySQL. There are many ways to install the need MySQL client libraries on Mac OS X, http://brew.sh/ is a simple solution. Here is a simple set of steps once you have installed homebrew on Mac:
+
+--  Insure that all is up to date
+brew update
+brew doctor
+brew upgrade
+
+brew install mysql-connector-c
+
+Q) How can I set up tests for Gnoga Applications?
+
+A) There are many products on the market for testing Web sites / apps, any of those can be used with Gnoga as well. For example one inexpensive one for Mac is Fake.app http://fakeapp.com/
+
+Q) Can I build native iOS apps for my iPhone or iPad?
+
+A) In theory it should be possible using GNAT with an LLVM backend and PhoneGAP. I have not explored it yet.
+
+Q) Can I build native Android Apps?
+
+A) In theory it should be possible using gcc/ada with an Android target and PhoneGAP. I have not explored it yet.
+
+Q) Can I build _native_ Chromebook apps?
+
+A) It should be possible using gcc/ada, I have not yet explored the requirements for it, but Chromebooks are running Linux and Google does have a spec for it.
+
+Q) Is it possible to use a reverse proxies / load balancers with Gnoga Apps?
+
+A) Gnoga uses websockets which uses an http "upgrade" mechanism which means
+the proxy or load balancer must have some knowledge of how to handle websockets. The two most popular Apache and Nginx support it:
+
+For nginx see:
+   http://nginx.org/en/docs/http/websocket.html
+   http://nginx.com/blog/websocket-nginx/
+
+For Apache 2.4.5+ see:
+   http://httpd.apache.org/docs/2.4/mod/mod_proxy_wstunnel.html
+
+Example of Gnoga application as its own domain:
+
+<VirtualHost *:80>
+    ServerName snake.gnoga.com
+    ServerAdmin david@botton.com
+
+    ProxyPass /gnoga ws://127.0.0.1:8080/gnoga
+    ProxyPass / http://127.0.0.1:8080/
+    ProxyPassReverse / http://127.0.0.1:8080/
+
+    ErrorLog ${APACHE_LOG_DIR}/gnoga.err.log
+    CustomLog ${APACHE_LOG_DIR}/gnoga.log common
+</VirtualHost>
+
+Example of a Gnoga application as a subdirectory on a larger site using Apache:
+
+<VirtualHost *:80>
+    ServerName gnoga.com
+    ServerAlias www.gnoga.com
+    ServerAdmin david@botton.com
+    DocumentRoot /www/gnoga
+
+    ProxyPass /snake http://127.0.0.1:8080
+    ProxyPassReverse /snake http://www.gnoga.com:8080
+    ProxyPass /gnoga ws://www.gnoga.com:8080/gnoga
+    ProxyPass /js http://www.gnoga.com:8080/js
+
+    ErrorLog ${APACHE_LOG_DIR}/gnoga.err.log
+    CustomLog ${APACHE_LOG_DIR}/gnoga.log common
+</VirtualHost>

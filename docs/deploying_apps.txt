@@ -1,0 +1,25 @@
+The ideal structure to deploy your apps for production is the following
+directory structure:
+
+App Dir
+  |
+  |___ bin - your gnoga app binary
+  |
+  |___ html - boot.html (or other boot loader used)
+  |
+  |___ js - must contain jquery.min.js
+  |
+  |___ css - optional, a directory for serving css files
+  |
+  |___ img - optional, a directory of serving graphics.
+  |
+  |___ templates - optional, if using Gnoga.Server.Template_Parser
+  |
+  |___ upload - option, optional directory for incoming files
+
+You can use Gnoga.Application.Open_URL to start a default browser
+pointed to the Gnoga app on startup.
+
+If any of the subdirectories is missing html is assumed and if html is
+missing the App Dir is assumed. The executable can be in the bin directory or
+in App Dir.
