@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 gnoga with changes to support aunit testing
-=======
 # GNOGA - The GNU Omnificent GUI for Ada
 ## http://www.gnoga.com
 
@@ -88,4 +86,3 @@ Here is an overview of Gnoga's framework:
 
 9. Native Desktop and Mobile Application Support coming:
       Gnoga.Server.Application.Gtk_Window - Native GTK front end
->>>>>>> upstream/master
