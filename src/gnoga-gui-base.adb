@@ -41,6 +41,7 @@ with Ada.Strings.Unbounded;
 with Ada.Strings.Fixed;
 with Ada.Unchecked_Deallocation;
 with Ada.Characters.Conversions;
+with CAC.Trace;
 
 with Gnoga.Server.Connection;
 
@@ -339,7 +340,7 @@ package body Gnoga.Gui.Base is
    is
    begin
       if Object.Connection_ID /= Gnoga.Types.No_Connection then
-         raise Object_Already_Created;
+         raise Object_Already_Created with "id '" & ID & "'";
       end if;
 
       Gnoga.Server.Connection.Execute_Script (ID     => Connection_ID,
@@ -689,14 +690,18 @@ package body Gnoga.Gui.Base is
                                 Handler : in     Action_Event)
    is
    begin
+--CAC.Trace.Log (CAC.Trace.Here,  CAC.Trace.Who);
       Object.On_Resize_Event := Handler;
    end On_Resize_Handler;
 
    procedure Fire_On_Resize (Object : in out Base_Type)
    is
    begin
+--CAC.Trace.Log (CAC.Trace.Here,  CAC.Trace.Who);
       if Object.On_Resize_Event /= null then
+--CAC.Trace.Log (CAC.Trace.Here,  CAC.Trace.Who & " In_Resize " & Object.In_Resize'img);
          if not Object.In_Resize then
+--CAC.Trace.Log (CAC.Trace.Here,  CAC.Trace.Who);
             Object.In_Resize := True;
             Object.On_Resize_Event (Object);
             Object.In_Resize := False;
@@ -2056,11 +2061,12 @@ package body Gnoga.Gui.Base is
       elsif Event = "paste" then
          Object.Fire_On_Paste;
       elsif Event = "resize" then
-         if not Object.In_Resize then
-            Object.In_Resize := True;
+--CAC.Trace.Log (CAC.Trace.Here,  CAC.Trace.Who & " In_Resize " & Object.In_Resize'img);
+--       if not Object.In_Resize then
+--          Object.In_Resize := True;
             Base_Type'Class (Object).On_Resize;
-            Object.In_Resize := False;
-         end if;
+--          Object.In_Resize := False;
+--       end if;
       else
          Gnoga.Log ("Unhandled Event : " & Event);
       end if;

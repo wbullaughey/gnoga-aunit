@@ -1120,8 +1120,8 @@ package body Gnoga.Server.Connection is
             Log ("Error connection_Socket - " & ID'Img);
             Log (Ada.Exceptions.Exception_Information (E));
             raise Connection_Error with
-              "Connection ID" & ID'Img & " not found in connection map. " &
-              "Connection most likely was previously closed.";
+              "Connection ID '" & ID'Img & "' not found in connection map. " &
+              "Connection most likely was previously closed at " & CAC.Trace.Here;
       end Connection_Socket;
 
       function Find_Connection_ID (Socket : Socket_Type)

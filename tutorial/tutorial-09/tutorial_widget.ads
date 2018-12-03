@@ -15,6 +15,7 @@ package Tutorial_Widget is
          My_Submit   : Gnoga.Gui.Element.Form.Submit_Button_Type;
       end record;
 
+
    overriding
    procedure Create  (View    : in out My_Widget_Type;
                       Parent  : in out Gnoga.Gui.Base.Base_Type'Class;

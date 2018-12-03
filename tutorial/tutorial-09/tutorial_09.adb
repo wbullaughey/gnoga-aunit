@@ -55,6 +55,7 @@ procedure Tutorial_09 is
         Gnoga.Application.Multi_Connect.Connection_Holder_Type);
    --  Setup GUI for each connection.
 
+
    procedure On_Result_Connect
      (Main_Window : in out Gnoga.Gui.Window.Window_Type'Class;
       Connection  : access

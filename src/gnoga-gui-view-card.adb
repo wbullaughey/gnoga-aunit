@@ -90,6 +90,7 @@ package body Gnoga.Gui.View.Card is
    -- Add_Card --
    --------------
 
+
    procedure Add_Card (View : in out Card_View_Type;
                        Name : in     String;
                        Card : access View_Base_Type'Class := null;
