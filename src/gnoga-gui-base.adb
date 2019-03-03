@@ -1032,6 +1032,7 @@ package body Gnoga.Gui.Base is
                                Handler : in     Action_Event)
    is
    begin
+cac.trace.log (cac.trace.Here, cac.trace.Who);
       if
         Object.On_Click_Event /= null and
         Object.On_Mouse_Click_Event = null
@@ -1042,6 +1043,7 @@ package body Gnoga.Gui.Base is
       Object.On_Click_Event := Handler;
 
       if Handler /= null and Object.On_Mouse_Click_Event = null then
+cac.trace.log (cac.trace.Here, cac.trace.Who);
          Object.Bind_Event (Event   => "click",
                             Message => "",
                             Script  => Mouse_Event_Script);
@@ -2133,6 +2135,7 @@ package body Gnoga.Gui.Base is
          end if;
       end Cancel_Event;
    begin
+cac.trace.log (cac.trace.Here, cac.trace.Who);
       Bind_Event_Script (Object => Object,
                          Event  => Event,
                          Script => Eval & "ws.send (""" &
@@ -2149,6 +2152,7 @@ package body Gnoga.Gui.Base is
                                 Script : in     String)
    is
    begin
+cac.trace.log (cac.trace.Here, cac.trace.Who);
       Object.jQuery_Execute ("on (""" & Event & """, function (e, data) {" &
                                Script & "});");
    end Bind_Event_Script;
@@ -2161,6 +2165,7 @@ package body Gnoga.Gui.Base is
                            Event  : in     String)
    is
    begin
+cac.trace.log (cac.trace.Here, cac.trace.Who);
       Object.jQuery_Execute ("off (""" & Event & """);");
    end Unbind_Event;
 
