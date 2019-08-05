@@ -1477,7 +1477,7 @@ package body Gnoga.Server.Connection is
 
       Old_ID : constant String := Get_Old_ID;
    begin
-      CAC.Trace.Log (true, CAC.Trace.Here, CAC.Trace.Who &
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who &
          " ID " & ID'img & " F '" & F & "' Old_ID '" & Old_ID & "'");
       Connection_Manager.Add_Connection (Socket => S,
                                          New_ID => ID);

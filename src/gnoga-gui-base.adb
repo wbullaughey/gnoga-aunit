@@ -1032,7 +1032,7 @@ package body Gnoga.Gui.Base is
                                Handler : in     Action_Event)
    is
    begin
-cac.trace.log (cac.trace.Here, cac.trace.Who);
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " Unique_ID" & Object.Unique_ID'img);
       if
         Object.On_Click_Event /= null and
         Object.On_Mouse_Click_Event = null
@@ -1043,7 +1043,7 @@ cac.trace.log (cac.trace.Here, cac.trace.Who);
       Object.On_Click_Event := Handler;
 
       if Handler /= null and Object.On_Mouse_Click_Event = null then
-cac.trace.log (cac.trace.Here, cac.trace.Who);
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
          Object.Bind_Event (Event   => "click",
                             Message => "",
                             Script  => Mouse_Event_Script);
@@ -2135,7 +2135,7 @@ cac.trace.log (cac.trace.Here, cac.trace.Who);
          end if;
       end Cancel_Event;
    begin
-cac.trace.log (cac.trace.Here, cac.trace.Who);
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
       Bind_Event_Script (Object => Object,
                          Event  => Event,
                          Script => Eval & "ws.send (""" &
@@ -2152,7 +2152,7 @@ cac.trace.log (cac.trace.Here, cac.trace.Who);
                                 Script : in     String)
    is
    begin
-cac.trace.log (cac.trace.Here, cac.trace.Who);
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
       Object.jQuery_Execute ("on (""" & Event & """, function (e, data) {" &
                                Script & "});");
    end Bind_Event_Script;
@@ -2165,7 +2165,7 @@ cac.trace.log (cac.trace.Here, cac.trace.Who);
                            Event  : in     String)
    is
    begin
-cac.trace.log (cac.trace.Here, cac.trace.Who);
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
       Object.jQuery_Execute ("off (""" & Event & """);");
    end Unbind_Event;
 

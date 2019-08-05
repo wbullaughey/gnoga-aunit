@@ -1,6 +1,7 @@
 --  Inspired by GWindows and jdemo
 
 with Ada.Exceptions;
+with GNAT.Source_Info; use GNAT.Source_Info;
 
 with Gnoga.Gui.Element.Common;
 with Gnoga.Gui.Plugin.jQueryUI.Widget;
@@ -13,7 +14,8 @@ package body Gnoga.Gui.Plugin.Message_Boxes is
    function Message_Box (
       Parent          : in out Gnoga.Gui.Base.Base_Type'Class;
       Title, Text : in     String;
-      Style       : in     Message_Box_Type                     := OK_Box
+      Style       : in     Message_Box_Type                     := OK_Box;
+      Override    : in     Override_Access                      := null
    )
    return Message_Box_Result
    is
@@ -152,10 +154,17 @@ package body Gnoga.Gui.Plugin.Message_Boxes is
       end case;
       Gnoga.Log ("entrée de la boucle");
       loop
+         if Override /= null then
+            if Override.all (Parent, Title, Text, Style, Result) then
+               Gnoga.Log ("sortie de la boucle test result " & Result'Img);
+               return Result;
+            end if;
+         end if;
          delay 0.10;
          exit when Result /= None;
       end loop;  -- Waiting for a click into OK
-      Gnoga.Log ("sortie de la boucle");
+      Gnoga.Log ("sortie de la boucle result " & Result'Img);
+
       return Result;
    exception
       when E : others =>
@@ -167,12 +176,13 @@ package body Gnoga.Gui.Plugin.Message_Boxes is
    procedure Message_Box (
       Parent      : in out Gnoga.Gui.Base.Base_Type'Class;
       Title, Text : in     String;
-      Style       : in     Message_Box_Type                     := OK_Box
+      Style       : in     Message_Box_Type                     := OK_Box;
+      Override    : in     Override_Access                      := null
    )
    is
       Dummy_Result : Message_Box_Result;
    begin
-      Dummy_Result := Message_Box (Parent, Title, Text, Style);
+      Dummy_Result := Message_Box (Parent, Title, Text, Style, Override);
    end Message_Box;
 
 end Gnoga.Gui.Plugin.Message_Boxes;

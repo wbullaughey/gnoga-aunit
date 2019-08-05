@@ -36,6 +36,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Exceptions;
+with CAC.Trace;
 
 package body Gnoga.Gui.View.Docker is
 
@@ -67,6 +68,7 @@ package body Gnoga.Gui.View.Docker is
          View.Top_Dock.Left (0);
          View.Top_Dock.Box_Width (View.Outer_Width_To_Margin);
          Top_Height := View.Top_Dock.Outer_Height_To_Margin;
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " Top_Height" & Top_Height'img);
       end if;
 
       if View.Bottom_Dock /= null then
@@ -74,6 +76,7 @@ package body Gnoga.Gui.View.Docker is
          View.Bottom_Dock.Left (0);
          View.Bottom_Dock.Box_Width (View.Outer_Width_To_Margin);
          Bottom_Height := View.Bottom_Dock.Outer_Height_To_Margin;
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " Bottom_Height" & Bottom_Height'img);
       end if;
 
       if View.Left_Dock /= null then
@@ -82,6 +85,7 @@ package body Gnoga.Gui.View.Docker is
          View.Left_Dock.Box_Height
            (View.Outer_Height_To_Margin - Top_Height - Bottom_Height);
          Left_Width := View.Left_Dock.Width;
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " Left_Width" & Left_Width'img);
       end if;
 
       if View.Right_Dock /= null then
@@ -90,6 +94,7 @@ package body Gnoga.Gui.View.Docker is
          View.Right_Dock.Box_Height
            (View.Outer_Height_To_Margin - Top_Height - Bottom_Height);
          Right_Width := View.Right_Dock.Width;
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " Right_Width" & Right_Width'img);
       end if;
 
       if View.Fill_Dock /= null then
@@ -99,6 +104,7 @@ package body Gnoga.Gui.View.Docker is
            (View.Outer_Height_To_Margin - Top_Height - Bottom_Height);
          View.Fill_Dock.Box_Width
            (View.Outer_Width_To_Margin - Left_Width - Right_Width);
+         CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
       end if;
    exception
       when E : others =>
@@ -114,6 +120,7 @@ package body Gnoga.Gui.View.Docker is
                        Dock : access View_Base_Type'Class)
    is
    begin
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
       View.Element_Map.Include ("top", Dock);
       Dock.Box_Sizing (Gnoga.Gui.Element.Border_Box);
       Dock.Position (Gnoga.Gui.Element.Absolute);
@@ -139,6 +146,7 @@ package body Gnoga.Gui.View.Docker is
                           Dock : access View_Base_Type'Class)
    is
    begin
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
       View.Element_Map.Include ("bottom", Dock);
       Dock.Box_Sizing (Gnoga.Gui.Element.Border_Box);
       Dock.Position (Gnoga.Gui.Element.Absolute);
@@ -165,6 +173,7 @@ package body Gnoga.Gui.View.Docker is
                         Dock : access View_Base_Type'Class)
    is
    begin
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
       View.Element_Map.Include ("fill", Dock);
       Dock.Box_Sizing (Gnoga.Gui.Element.Border_Box);
       Dock.Position (Gnoga.Gui.Element.Absolute);
@@ -190,6 +199,7 @@ package body Gnoga.Gui.View.Docker is
                         Dock : access View_Base_Type'Class)
    is
    begin
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
       View.Element_Map.Include ("left", Dock);
       Dock.Box_Sizing (Gnoga.Gui.Element.Border_Box);
       Dock.Position (Gnoga.Gui.Element.Absolute);
@@ -215,6 +225,7 @@ package body Gnoga.Gui.View.Docker is
                          Dock : access View_Base_Type'Class)
    is
    begin
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
       View.Element_Map.Include ("right", Dock);
       Dock.Box_Sizing (Gnoga.Gui.Element.Border_Box);
       Dock.Position (Gnoga.Gui.Element.Absolute);
@@ -240,6 +251,7 @@ package body Gnoga.Gui.View.Docker is
    overriding
    procedure On_Resize (View : in out Docker_View_Type) is
    begin
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who);
       View.Update_Dock;
    end On_Resize;
 

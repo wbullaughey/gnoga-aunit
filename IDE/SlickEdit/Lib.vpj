@@ -6,7 +6,7 @@
     VendorName="SlickEdit"
     TemplateName="ada"
     Customized="1"
-    WorkingDir=".">
+    WorkingDir="../../">
     <Config
         Name="Debug"
         Type="gnuc"
@@ -15,6 +15,25 @@
         OutputFile="%bdLib.a"
         CompilerConfigName="Latest Version">
         <Menu>
+            <Target
+                Name="Build"
+                MenuCaption="&amp;Build"
+                CaptureOutputWith="ProcessBuffer"
+                Deletable="0"
+                SaveOption="SaveAll"
+                RunFromDir="%rw"
+                ClearProcessBuffer="1"
+                Beep="1">
+                <Exec CmdLine="./build.sh release"/>
+            </Target>
+            <Target
+                Name="Install"
+                MenuCaption="Install"
+                RunFromDir="/Users/wayne/vendor/gnoga-aunit/"
+                CaptureOutputWith="ProcessBuffer"
+                SaveOption="SaveNone">
+                <Exec CmdLine="./build.sh install"/>
+            </Target>
             <Target
                 Name="Compile"
                 MenuCaption="&amp;Compile"
@@ -36,17 +55,6 @@
                 SaveOption="SaveCurrent"
                 RunFromDir="%rw">
                 <Exec CmdLine='ar -rs %xup "%o" %f'/>
-            </Target>
-            <Target
-                Name="Build"
-                MenuCaption="&amp;Build"
-                CaptureOutputWith="ProcessBuffer"
-                Deletable="0"
-                SaveOption="SaveWorkspaceFiles"
-                RunFromDir="%rw"
-                ClearProcessBuffer="1"
-                Beep="1">
-                <Exec CmdLine="make"/>
             </Target>
             <Target
                 Name="Rebuild"
@@ -111,6 +119,25 @@
         CompilerConfigName="Latest Version">
         <Menu>
             <Target
+                Name="Build"
+                MenuCaption="&amp;Build"
+                CaptureOutputWith="ProcessBuffer"
+                Deletable="0"
+                SaveOption="SaveWorkspaceFiles"
+                RunFromDir="%rw"
+                ClearProcessBuffer="1"
+                Beep="1">
+                <Exec CmdLine="make"/>
+            </Target>
+            <Target
+                Name="Install"
+                MenuCaption="Install"
+                RunFromDir="/Users/wayne/vendor/gnoga-aunit/"
+                CaptureOutputWith="ProcessBuffer"
+                SaveOption="SaveNone">
+                <Exec CmdLine="./build.sh install"/>
+            </Target>
+            <Target
                 Name="Compile"
                 MenuCaption="&amp;Compile"
                 Dialog="_gnuc_options_form Compile"
@@ -131,17 +158,6 @@
                 SaveOption="SaveCurrent"
                 RunFromDir="%rw">
                 <Exec CmdLine='ar -rs %xup "%o" %f'/>
-            </Target>
-            <Target
-                Name="Build"
-                MenuCaption="&amp;Build"
-                CaptureOutputWith="ProcessBuffer"
-                Deletable="0"
-                SaveOption="SaveWorkspaceFiles"
-                RunFromDir="%rw"
-                ClearProcessBuffer="1"
-                Beep="1">
-                <Exec CmdLine="make"/>
             </Target>
             <Target
                 Name="Rebuild"
@@ -205,7 +221,9 @@
         <Folder
             Name="Header Files"
             Filters="*.h;*.H;*.hh;*.hpp;*.hxx;*.h++;*.inc;*.sh;*.cpy;*.if"
-            GUID="{54524FE6-DFD1-472F-A0E4-DE3510710CA6}"/>
+            GUID="{54524FE6-DFD1-472F-A0E4-DE3510710CA6}">
+            <F N="../../build.sh"/>
+        </Folder>
         <Folder
             Name="Resource Files"
             Filters="*.ico;*.cur;*.dlg"

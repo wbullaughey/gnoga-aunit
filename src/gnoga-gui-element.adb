@@ -37,6 +37,7 @@
 
 with Ada.Strings.Fixed;
 with Ada.Exceptions;
+with CAC.Trace;
 
 with Gnoga.Server.Connection;
 
@@ -1620,6 +1621,7 @@ package body Gnoga.Gui.Element is
 
    procedure Click (Element : in out Element_Type) is
    begin
+      CAC.Trace.Log (Debug, CAC.Trace.Here, CAC.Trace.Who & " on Unique_ID" & Element.Unique_ID'img);
       Element.Execute ("click();");
    end Click;
 
